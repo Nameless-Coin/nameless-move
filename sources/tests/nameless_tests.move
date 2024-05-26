@@ -4,8 +4,9 @@ module nameless::nameless_tests {
     use std::string::utf8;
 
     use sui::clock;
-    use sui::coin::{mint_for_testing, CoinMetadata};
+    use sui::url::new_unsafe_from_bytes;
     use sui::test_utils::{destroy, assert_eq};
+    use sui::coin::{mint_for_testing, CoinMetadata};
     use sui::test_scenario::{Self as ts, take_shared, next_tx};
 
     use nameless::nameless::{Self, TreasuryCapWrapper, NAMELESS};
@@ -15,7 +16,7 @@ module nameless::nameless_tests {
     const DAY: u64 = 86400000;
 
     #[test]
-    fun test_current_price() {
+    fun test_end_to_end() {
         let mut scenario = ts::begin(@dev);
 
         nameless::init_for_testing(scenario.ctx());
@@ -53,10 +54,15 @@ module nameless::nameless_tests {
             &clock,
             mint_for_testing(20 * MIST, scenario.ctx()),
             utf8(b"BONK"),
-            ascii::string(b"BONK"),
+            ascii::string(b"BONK!"),
             utf8(b"Solano doggie"),
             ascii::string(b"www.")
         );
+
+        assert_eq(metadata.get_name(), utf8(b"BONK"));
+        assert_eq(metadata.get_symbol(), ascii::string(b"BONK!"));
+        assert_eq(metadata.get_description(), utf8(b"Solano doggie"));
+        assert_eq(*metadata.get_icon_url().borrow(), new_unsafe_from_bytes(b"www."));
 
         assert_eq(wrapper.current_price(&clock), 40 * MIST);
 
