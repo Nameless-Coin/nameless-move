@@ -1,0 +1,30 @@
+---
+compiled_package_info:
+  package_name: Nameless
+  address_alias_instantiation:
+    dev: a5b1611d756c1b2723df1b97782cacfd10c8f94df571935db87b7f54ef653d66
+    nameless: "0000000000000000000000000000000000000000000000000000000000000000"
+    std: "0000000000000000000000000000000000000000000000000000000000000001"
+    sui: "0000000000000000000000000000000000000000000000000000000000000002"
+  source_digest: B58AE2BA69155A60B334C362238DF867735CFBD60768C024DE50EF50DD9CC661
+  build_flags:
+    dev_mode: true
+    test_mode: true
+    generate_docs: false
+    install_dir: ~
+    force_recompilation: false
+    lock_file: ~
+    fetch_deps_only: false
+    skip_fetch_latest_git_deps: false
+    default_flavor: sui
+    default_edition: ~
+    deps_as_root: false
+    silence_warnings: false
+    warnings_are_errors: false
+    additional_named_addresses: {}
+    lint_flag:
+      no_lint: false
+      lint: false
+dependencies:
+  - MoveStdlib
+  - Sui

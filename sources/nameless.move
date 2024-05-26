@@ -103,19 +103,22 @@ module nameless::nameless {
     clock: &Clock,    
   ): u64 {
     let current_ts = clock.timestamp_ms();
+
     if (wrapper.last_update + DAY > current_ts) return safe_price(wrapper.price);
     
-    let diff = current_ts - wrapper.last_update + DAY;
+    let diff = current_ts - (wrapper.last_update + DAY);
 
     let hours = diff / HOUR;
 
     if (hours == 0) return safe_price(wrapper.price);
 
     let discount_rate = MIST / 100;
-
+     
     let discount = hours * discount_rate;
 
-    safe_price(mul_div(discount, wrapper.price))
+    let safe_discount = min(discount, MIST);
+
+    safe_price(wrapper.price - mul_div(safe_discount, wrapper.price))
   }
 
   // === Admin Functions ===
@@ -131,6 +134,10 @@ module nameless::nameless {
   fun safe_price(x: u64): u64 {
     let floor_price = FLOOR_PRICE * MIST;
     if (x > floor_price) x else floor_price
+  }
+
+  fun min(x: u64, y: u64): u64 {
+    if (x > y) y else x
   }
 
   fun mul_div(x: u64, y: u64): u64 {
@@ -152,4 +159,11 @@ module nameless::nameless {
     }
 
   // === Test Functions === 
+
+  // Tests
+
+  #[test_only]
+  public fun init_for_testing(ctx: &mut TxContext) {
+    init(NAMELESS {}, ctx);
+  }
 }
